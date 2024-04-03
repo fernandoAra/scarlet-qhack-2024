@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'coins_provider.dart'; // Import your CoinsProvider
+import 'inventory_provider.dart';
 // import 'store_item.dart'; // Import StoreItem model
 
 class StoreItem {
@@ -30,16 +31,22 @@ class Store extends StatelessWidget {
           subtitle: Text("Cost: ${item.cost} coins"),
           trailing: ElevatedButton(
             onPressed: () {
-              final coinsProvider = Provider.of<CoinsProvider>(context, listen: false);
-              if (coinsProvider.coins >= item.cost) {
-                coinsProvider.addCoins(-item.cost); // Deduct cost from total coins
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Purchased ${item.name}!')),
-                );
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Not enough coins.')),
-                );
+                final coinsProvider = Provider.of<CoinsProvider>(context, listen: false);
+                final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+                
+                if (inventoryProvider.isItemOwned(item)) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("You already own this item.")),
+                  );
+                } else if (inventoryProvider.purchaseItem(item, item.cost, coinsProvider.coins)) {
+                  coinsProvider.addCoins(-item.cost);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Purchased ${item.name}!')),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Not enough coins.')),
+                  );
               }
             },
             child: Text('Buy'),

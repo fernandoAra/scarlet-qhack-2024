@@ -3,15 +3,19 @@ import 'home_page.dart';
 import 'left1.dart';
 import 'store.dart';
 import 'package:provider/provider.dart';
-import 'coins_provider.dart'; // Ensure this is the correct path to your CoinsProvider class
+import 'coins_provider.dart';
+import 'inventory_provider.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => CoinsProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CoinsProvider()),
+        ChangeNotifierProvider(create: (context) => InventoryProvider()),
+      ],
       child: MaterialApp(
         home: DefaultTabController(
           length: 3,
@@ -31,9 +35,9 @@ class MyApp extends StatelessWidget {
             ),
             body: TabBarView(
               children: [
-                Left1(),
-                MyHomePage(),
-                Store(),
+                Left1(),  // Your first tab content
+                MyHomePage(),  // Your home page content
+                Store(),  // Your store page where items can be bought
               ],
             ),
           ),
