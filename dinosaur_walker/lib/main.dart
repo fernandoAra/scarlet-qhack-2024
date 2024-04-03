@@ -1,20 +1,37 @@
 import 'package:flutter/material.dart';
+import 'home_page.dart';
+import 'left1.dart';
+import 'right1.dart';
 
-import 'src/app.dart';
-import 'src/settings/settings_controller.dart';
-import 'src/settings/settings_service.dart';
+void main() => runApp(MyApp());
 
-void main() async {
-  // Set up the SettingsController, which will glue user settings to multiple
-  // Flutter Widgets.
-  final settingsController = SettingsController(SettingsService());
-
-  // Load the user's preferred theme while the splash screen is displayed.
-  // This prevents a sudden theme change when the app is first displayed.
-  await settingsController.loadSettings();
-
-  // Run the app and pass in the SettingsController. The app listens to the
-  // SettingsController for changes, then passes it further down to the
-  // SettingsView.
-  runApp(MyApp(settingsController: settingsController));
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 3,
+        initialIndex: 1,  // Set the Home page to be the one in the middle
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Tabbed Navigation Demo'),
+            bottom: TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.search), text: "First"),
+                Tab(icon: Icon(Icons.home), text: "Home"),
+                Tab(icon: Icon(Icons.notifications), text: "Second"),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              Left1(),
+              MyHomePage(),
+              Right1(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
