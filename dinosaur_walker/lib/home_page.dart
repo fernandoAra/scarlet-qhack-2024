@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'coins_provider.dart'; // Make sure this import points to where your CoinsProvider class is defined
 
@@ -41,8 +42,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   TextField(
                     controller: localDistanceController,
-                    decoration: InputDecoration(hintText: 'Enter distance traveled'),
-                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                    hintText: 'Enter distance traveled',
+                    suffixText: '(Km)',
+                    ),
+                    keyboardType: TextInputType.number, // Ensure numeric keyboard for numbers
+                    inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))],
                   ),
                 ],
               );
