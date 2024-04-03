@@ -60,20 +60,20 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             TextButton(
               onPressed: () {
-                int distance = int.tryParse(localDistanceController.text) ?? 0;
+                double distance = double.tryParse(localDistanceController.text) ?? 0;
                 int points = 0;
                 switch (selectedTransport) {
                   case 'car':
-                    points = distance;
+                    points = distance.round();
                     break;
                   case 'train':
-                    points = distance * 2;
+                    points = distance.round() * 2;
                     break;
                   case 'bike':
-                    points = distance * 5;
+                    points = distance.round() * 5;
                     break;
                 }
-                Provider.of<CoinsProvider>(context, listen: false).addCoins(points); // Add coins using the Provider
+                Provider.of<CoinsProvider>(context, listen: false).addCoins(points.round()); // Add coins using the Provider
                 setState(() {
                   _messages.add("Used $selectedTransport and traveled $distance km gaining $points points");
                 });
