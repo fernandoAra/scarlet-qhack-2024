@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'exp_provider.dart'; // Make sure this is imported
 import 'user_profile_page.dart';
+import 'user_provider.dart';
 
 class RankingsPage extends StatefulWidget {
   @override
@@ -31,16 +32,17 @@ class _RankingsPageState extends State<RankingsPage> {
   @override
   Widget build(BuildContext context) {
     final userLevel = Provider.of<ExpProvider>(context).level;
+    final userName = Provider.of<UserProvider>(context).username;
 
     // Rebuild the rankings lists with the user's current level each time
     final List<Map<String, dynamic>> globalRankings = [
       ..._globalRankings.where((item) => item['name'] != 'You'), // Remove old user entry
-      {'name': 'You', 'level': userLevel}, // Add updated user entry
+      {'name': userName, 'level': userLevel}, // Add updated user entry
     ];
 
     final List<Map<String, dynamic>> friendsRankings = [
       ..._friendsRankings.where((item) => item['name'] != 'You'), // Remove old user entry
-      {'name': 'You', 'level': userLevel}, // Add updated user entry
+      {'name': userName, 'level': userLevel}, // Add updated user entry
     ];
 
     return DefaultTabController(
@@ -67,13 +69,14 @@ class _RankingsPageState extends State<RankingsPage> {
   }
 
   Widget _buildRankingsList(List<Map<String, dynamic>> rankings) {
+    final userName = Provider.of<UserProvider>(context).username;
     rankings.sort((a, b) => b['level'].compareTo(a['level']));
 
     return ListView.builder(
       itemCount: rankings.length,
       itemBuilder: (context, index) {
         final profile = rankings[index];
-        final bool isCurrentUser = profile['name'] == 'You'; // Check if it's the current user
+        final bool isCurrentUser = profile['name'] == userName; // Check if it's the current user
   
       
         return ListTile(
@@ -85,14 +88,14 @@ class _RankingsPageState extends State<RankingsPage> {
           subtitle: Text('Level: ${profile['level']}'),
           onTap: () {
             // Mock character for demonstration
-            String characterAsset = profile['name'] == 'Friend 1' ? 'assets/animations/character_friend1.gif' : 'assets/animations/character_global.png';
+            String characterAsset = profile['name'] == 'Friend 1' ? 'assets/animations/character_friend1.gif' : 'assets/animations/character_global1.gif';
             
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => UserProfilePage(
                 username: profile['name'],
                 level: profile['level'],
-                characterAsset: characterAsset,
+                // characterAsset: characterAsset,
               )),
             );
           },

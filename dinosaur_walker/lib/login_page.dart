@@ -19,9 +19,11 @@ class _LoginPageState extends State<LoginPage> {
     if (providerName.isNotEmpty) {
       final username = '$providerName User #${Random().nextInt(9999)}'; // Example format
       Provider.of<UserProvider>(context, listen: false).setUsername(username);
-    } else {
+    } else if (_usernameController.text.isNotEmpty){
       // Otherwise, use the username from the input field
       Provider.of<UserProvider>(context, listen: false).setUsername(_usernameController.text);
+    } else {
+      Provider.of<UserProvider>(context, listen: false).setUsername('Dino #${Random().nextInt(9999)}'); 
     }
     setState(() {
       _isLoading = true; // Start the loading animation

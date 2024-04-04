@@ -38,3 +38,5 @@ flutter:
     - assets/images/lime_logo.png
     - assets/images/deutschebahn_logo.png
     - assets/images/logo.png
+    - assets/animations/character_friend1.gif
+    - assets/animations/character_global1.gif

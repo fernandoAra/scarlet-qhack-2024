@@ -101,8 +101,10 @@ class _MyHomePageState extends State<MyHomePage> {
  @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-  final String userName = userProvider.username.isNotEmpty ? userProvider.username : 'Dino #${Random().nextInt(9999)}';
+    final String userName = userProvider.username.isNotEmpty ? userProvider.username : 'Dino #${Random().nextInt(9999)}';
     final isTopHatEquipped = Provider.of<InventoryProvider>(context).isItemEquipped(StoreItem(name: "Top Hat", cost: 10, levelRequirement: 1)); // Example check
+    final colorValue = _usernameToColorValue(userName);
+    final color = Color(colorValue).withOpacity(0.3); // Adjust opacity as needed
 
     return Scaffold(
       body: Column(
@@ -113,7 +115,10 @@ class _MyHomePageState extends State<MyHomePage> {
               alignment: Alignment.bottomCenter, // Adjust based on how you want to position the hat relative to the character
               children: [
                 // Your character image
-                Image.asset('assets/animations/dino_run2.gif', height: 384.0, width: 384.0),
+                ColorFiltered(
+                  colorFilter: ColorFilter.mode(color, BlendMode.srcATop),
+                  child: Image.asset('assets/animations/character_global1.gif', height: 384.0, width: 384.0),
+                ),
                 // Conditionally display the top hat
                 if (isTopHatEquipped) 
                   Positioned(
@@ -173,4 +178,12 @@ class _MyHomePageState extends State<MyHomePage> {
     _distanceController.dispose();
     super.dispose();
   }
+
+    int _usernameToColorValue(String username) {
+      int hash = 0;
+      for (int i = 0; i < username.length; i++) {
+        hash = 31 * hash + username.codeUnitAt(i);
+      }
+      return hash;
+    }
 }
