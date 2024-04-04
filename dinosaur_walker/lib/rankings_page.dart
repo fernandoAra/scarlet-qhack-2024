@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'exp_provider.dart'; // Make sure this is imported
+import 'user_profile_page.dart';
 
 class RankingsPage extends StatefulWidget {
   @override
@@ -66,23 +67,35 @@ class _RankingsPageState extends State<RankingsPage> {
   }
 
   Widget _buildRankingsList(List<Map<String, dynamic>> rankings) {
-    final userLevel = Provider.of<ExpProvider>(context, listen: false).level; // Access user level here if needed
-
-    // Sort rankings by level
     rankings.sort((a, b) => b['level'].compareTo(a['level']));
 
     return ListView.builder(
       itemCount: rankings.length,
       itemBuilder: (context, index) {
-        final isUser = rankings[index]['name'] == 'You';
-        // Customize ListTile appearance here, possibly using userLevel
+        final profile = rankings[index];
+        final bool isCurrentUser = profile['name'] == 'You'; // Check if it's the current user
+  
+      
         return ListTile(
           leading: CircleAvatar(
-            child: Text('${rankings[index]['level']}'),
-            backgroundColor: isUser ? Colors.blue : Colors.grey,
+            child: Text('${profile['level']}'),
+            backgroundColor: isCurrentUser ? Colors.blue : Colors.grey, // Highlight if current user
           ),
-          title: Text(rankings[index]['name'], style: TextStyle(color: isUser ? Colors.blue : null)),
-          subtitle: Text('Level: ${rankings[index]['level']}'),
+          title: Text(profile['name']),
+          subtitle: Text('Level: ${profile['level']}'),
+          onTap: () {
+            // Mock character for demonstration
+            String characterAsset = profile['name'] == 'Friend 1' ? 'assets/animations/character_friend1.gif' : 'assets/animations/character_global.png';
+            
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => UserProfilePage(
+                username: profile['name'],
+                level: profile['level'],
+                characterAsset: characterAsset,
+              )),
+            );
+          },
         );
       },
     );

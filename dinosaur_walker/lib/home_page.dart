@@ -6,6 +6,9 @@ import 'exp_provider.dart';
 import 'inventory_provider.dart';
 import 'store.dart';
 import 'package:flutter/material.dart';
+import 'user_provider.dart';
+import 'dart:math';
+
 
 
 class MyHomePage extends StatefulWidget {
@@ -97,11 +100,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
  @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+  final String userName = userProvider.username.isNotEmpty ? userProvider.username : 'Dino #${Random().nextInt(9999)}';
     final isTopHatEquipped = Provider.of<InventoryProvider>(context).isItemEquipped(StoreItem(name: "Top Hat", cost: 10, levelRequirement: 1)); // Example check
 
     return Scaffold(
       body: Column(
         children: <Widget>[
+          Text(userName, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)), // Display the username
           Center(
             child: Stack(
               alignment: Alignment.bottomCenter, // Adjust based on how you want to position the hat relative to the character

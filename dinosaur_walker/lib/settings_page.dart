@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'login_page.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -22,6 +23,15 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _isConnected[service] = true; // Simulate successful connection
     });
+  }
+
+    void _logout() {
+    // Here, add logic for clearing any user data, if necessary
+    // Navigate back to the LoginPage
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
   }
 
   @override
@@ -57,9 +67,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(
               leading: Icon(Icons.logout),
               title: Text('Log Out'),
-              onTap: () {
-                // Insert logout logic here
-              },
+              onTap: _logout, // Call the _logout function when tapped
             ),
 
             SizedBox(height: MediaQuery.of(context).size.height / 2.5), // Adjust space as needed

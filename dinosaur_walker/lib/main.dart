@@ -7,6 +7,9 @@ import 'coins_provider.dart';
 import 'inventory_provider.dart';
 import 'exp_provider.dart';
 import 'settings_page.dart';
+import 'login_page.dart';
+import 'user_provider.dart'; // Import the UserProvider
+
 
 void main() => runApp(MyApp());
 
@@ -18,9 +21,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CoinsProvider()),
         ChangeNotifierProvider(create: (context) => InventoryProvider()),
         ChangeNotifierProvider(create: (context) => ExpProvider()),
+        ChangeNotifierProvider(create: (context) =>UserProvider()), 
       ],
       child: MaterialApp(
-        home: MainPage(),
+        home: LoginPage(),
       ),
     );
   }
