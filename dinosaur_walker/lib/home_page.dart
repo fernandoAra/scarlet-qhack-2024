@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'coins_provider.dart'; // Make sure this import points to where your CoinsProvider class is defined
-import 'exp_provider.dart';
+import 'exp_provider.dart';                                                                                                                                              
 import 'inventory_provider.dart';
 import 'store.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,23 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+class WeeklyChallenge {
+  final String description;
+  final double progress; // Progress as a fraction of 1 (e.g., 0.5 for 50%)
+
+  WeeklyChallenge({required this.description, required this.progress});
+}
+
 class _MyHomePageState extends State<MyHomePage> {
+
+  final List<WeeklyChallenge> _weeklyChallenges = [
+    WeeklyChallenge(description: "CO2 saved  =  ${5}", progress: 1),
+    WeeklyChallenge(description: "Invite (2) friends (1/2)", progress: 0.5),
+    WeeklyChallenge(description: "Ride a bike for 10 km (8.1/10)", progress: 0.8),
+    WeeklyChallenge(description: "Spend less on car than last week (3/10)", progress: 0.3),
+    // Add more challenges as needed...
+  ];
+
   final List<String> _messages = [];
   String _selectedTransport = 'car';
   final TextEditingController _distanceController = TextEditingController();
@@ -40,14 +56,81 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (newValue) {
                       setDialogState(() => selectedTransport = newValue!);
                     },
-                    items: ['car', 'train', 'bike']
-                        .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
+                    items: [
+                      DropdownMenuItem(
+                        value: 'car',
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.directions_car),
+                            SizedBox(width: 10), // Provides space between the icon and the text
+                            Text('Car'),
+                          ],
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: 'train',
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.directions_train),
+                            SizedBox(width: 10),
+                            Text('Train'),
+                          ],
+                        ),
+                      ),
+                      // Add other transport options in a similar manner
+                      DropdownMenuItem(
+                        value: 'bike',
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.directions_bike),
+                            SizedBox(width: 10),
+                            Text('Bike'),
+                          ],
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: 'plane',
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.airplanemode_active),
+                            SizedBox(width: 10),
+                            Text('Plane'),
+                          ],
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: 'walking',
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.directions_walk),
+                            SizedBox(width: 10),
+                            Text('Walking'),
+                          ],
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: 'e-car',
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.electric_car),
+                            SizedBox(width: 10),
+                            Text('E-Car'),
+                          ],
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: 'scooter',
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.electric_scooter),
+                            SizedBox(width: 10),
+                            Text('Scooter'),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
+
                   TextField(
                     controller: localDistanceController,
                     decoration: const InputDecoration(
@@ -76,10 +159,28 @@ class _MyHomePageState extends State<MyHomePage> {
                     points = expPoints = distance.round(); // Assuming EXP is awarded the same way as coins
                     break;
                   case 'train':
-                    points = expPoints = distance.round() * 2;
+                    points = (distance.round() * 2.round());
+                    expPoints = (distance.round() * 2.9.round());
                     break;
                   case 'bike':
-                    points = expPoints = distance.round() * 5;
+                    points = (distance.round() * 5.round());
+                    expPoints = (distance.round() * 4.2.round());
+                    break;
+                  case 'plane':
+                    points = (distance.round() * 0.01).round();
+                    expPoints = (distance.round() * 0.001).round()  * 2;
+                    break;
+                  case 'walking':
+                    points = (distance.round() * 7.round());
+                    expPoints = (distance.round() * 12.round());
+                    break;
+                  case 'e-car':
+                    points = (distance.round() * 1.2).round();
+                    expPoints = (distance.round() * 1.7).round();
+                    break;
+                  case 'scooter':
+                    points = (distance.round() * 4.round());
+                    expPoints = (distance.round() * 4.2).round();
                     break;
                 }
                 Provider.of<CoinsProvider>(context, listen: false).addCoins(points.round()); // Add coins using the Provider
@@ -134,21 +235,32 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 120.0,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 10, // Example item count
-              itemBuilder: (context, index) {
+              itemCount: _weeklyChallenges.length,
+               itemBuilder: (context, index) {
+                final challenge = _weeklyChallenges[index];
                 return Container(
-                  width: 200.0, // Set card width
-                  height: 10.0, // Set card height, though it's dictated by the ListView height
-                  margin: EdgeInsets.all(3.0), // Add some spacing around each card
-                  color: Colors.accents[index % Colors.accents.length], // Example colorful background
-                  child: Center(
-                    child: Text(
-                      'Card $index',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                  width: 200.0,
+                  margin: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
+                  color: Colors.accents[index % Colors.accents.length],
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        challenge.description,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                    ),
+                      SizedBox(height: 10),
+                      LinearProgressIndicator(
+                        value: challenge.progress,
+                        backgroundColor: Colors.grey[400],
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    ],
                   ),
                 );
               },

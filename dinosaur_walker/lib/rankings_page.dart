@@ -18,13 +18,13 @@ class _RankingsPageState extends State<RankingsPage> {
     super.initState();
     // Example initialization, replace with your actual data loading logic
     _globalRankings = [
-      {'name': 'User A', 'level': 20},
-      {'name': 'User B', 'level': 18},
+      {'name': 'Armando Nogueiras', 'level': 20},
+      {'name': 'Deide Orvalho', 'level': 18},
       // Add more mock data as needed...
     ];
     _friendsRankings = [
-      {'name': 'Friend 1', 'level': 15},
-      {'name': 'Friend 2', 'level': 12},
+      {'name': 'Caio Marcio', 'level': 15},
+      {'name': 'Tiago Hugo', 'level': 12},
       // Add more mock data as needed...
     ];
   }

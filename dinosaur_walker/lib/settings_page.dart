@@ -1,5 +1,8 @@
+import 'package:dinosaur_walker/coins_provider.dart';
 import 'package:flutter/material.dart';
 import 'login_page.dart';
+import 'package:provider/provider.dart';
+
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -17,9 +20,14 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _isConnected[service] = null; // null indicates loading
     });
-
+    Provider.of<CoinsProvider>(context, listen: false).addDeutschBahnRewards();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Congratulations! You won 50 Coins and 105 Exp from your last trip with Deutsche Bahn"),
+        duration: Duration(seconds: 3),
+      ),
+    );
     await Future.delayed(Duration(milliseconds: 500)); // Simulate loading/connection time
-
     setState(() {
       _isConnected[service] = true; // Simulate successful connection
     });
@@ -77,6 +85,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Colors.red,
               'assets/images/deutschebahn_logo.png',
             ),
+            
             _buildConnectOption(
               'Lufthansa',
               Colors.red,
@@ -112,7 +121,17 @@ class _SettingsPageState extends State<SettingsPage> {
             : Image.asset(logoPath, width: 35),
         title: Text(title, style: TextStyle(color: isConnected ? Colors.white : Colors.white)),
         tileColor: isConnected ? Colors.green : initialColor,
-        onTap: () => !isConnected && !isLoading ? _connectService(title) : null,
+         onTap: () {
+          if (title == "Deutsch Bahn") {
+          // Trigger the specific event for Deutsch Bahn
+          Provider.of<CoinsProvider>(context, listen: false).addDeutschBahnRewards();
+
+          // Optionally, navigate to the home page or display a message here if needed
+        }
+          if (!isConnected && !isLoading) {
+             _connectService(title); // Existing connection logic
+          }
+    },
       ),
     );
   }

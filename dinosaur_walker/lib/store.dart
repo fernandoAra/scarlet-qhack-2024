@@ -18,8 +18,8 @@ class Store extends StatelessWidget {
   // Example store items
   final List<StoreItem> items = [
     StoreItem(name: "Top Hat", cost: 10, levelRequirement: 1),
-    StoreItem(name: "Item 2", cost: 20, levelRequirement: 2),
-    StoreItem(name: "Item 3", cost: 30, levelRequirement: 3),
+    StoreItem(name: "Sombrero", cost: 200, levelRequirement: 12),
+    StoreItem(name: "Bird Pet (Coming Soon)", cost: 310, levelRequirement: 50),
   ];
 
   @override
