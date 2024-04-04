@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
-import 'left1.dart';
+import 'rankings_page.dart';
 import 'store.dart';
 import 'package:provider/provider.dart';
 import 'coins_provider.dart';
 import 'inventory_provider.dart';
 import 'exp_provider.dart';
+import 'settings_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -42,6 +43,16 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.settings), // Using a settings icon, replace with a wrench icon if available
+          onPressed: () {
+            // Navigate to the SettingsPage
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SettingsPage()),
+            );
+          },
+        ),
         title: Row(
           children: [
             Expanded(
@@ -76,7 +87,7 @@ class _MainPageState extends State<MainPage> {
           });
         },
         children: [
-          Left1(), // Your first tab content
+          RankingsPage(), // Your first tab content
           MyHomePage(), // Your home page content
           Store(), // Your store page where items can be bought
         ],
@@ -84,8 +95,8 @@ class _MainPageState extends State<MainPage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Left1',
+            icon: Icon(Icons.leaderboard),
+            label: 'Ranks',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

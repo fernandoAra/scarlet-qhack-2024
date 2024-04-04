@@ -5,6 +5,8 @@ import 'coins_provider.dart'; // Make sure this import points to where your Coin
 import 'exp_provider.dart';
 import 'inventory_provider.dart';
 import 'store.dart';
+import 'package:flutter/material.dart';
+
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -113,6 +115,32 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Image.asset('assets/images/top_hat.png', height: 50), // Adjust size as needed
                   ),
               ],
+            ),
+          ),
+          SizedBox(height: 0), // Space between the GIF and the card list
+          Container(
+            // Set a height for the horizontal list container
+            height: 120.0,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 10, // Example item count
+              itemBuilder: (context, index) {
+                return Container(
+                  width: 200.0, // Set card width
+                  height: 10.0, // Set card height, though it's dictated by the ListView height
+                  margin: EdgeInsets.all(3.0), // Add some spacing around each card
+                  color: Colors.accents[index % Colors.accents.length], // Example colorful background
+                  child: Center(
+                    child: Text(
+                      'Card $index',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
           Expanded(
