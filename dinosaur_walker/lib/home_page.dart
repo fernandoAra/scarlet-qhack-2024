@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'coins_provider.dart'; // Make sure this import points to where your CoinsProvider class is defined
+import 'exp_provider.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -62,20 +63,23 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 double distance = double.tryParse(localDistanceController.text) ?? 0;
                 int points = 0;
+                int expPoints = 0;
                 switch (selectedTransport) {
                   case 'car':
-                    points = distance.round();
+                    points = expPoints = distance.round(); // Assuming EXP is awarded the same way as coins
                     break;
                   case 'train':
-                    points = distance.round() * 2;
+                    points = expPoints = distance.round() * 2;
                     break;
                   case 'bike':
-                    points = distance.round() * 5;
+                    points = expPoints = distance.round() * 5;
                     break;
                 }
                 Provider.of<CoinsProvider>(context, listen: false).addCoins(points.round()); // Add coins using the Provider
+                Provider.of<ExpProvider>(context, listen: false).addExp(expPoints); // Add EXP using the Provider
+
                 setState(() {
-                  _messages.add("Used $selectedTransport and traveled $distance km gaining $points points");
+                  _messages.add("Used $selectedTransport, traveled $distance km, gaining $points coins and $expPoints EXP");
                 });
                 Navigator.of(context).pop(); // Close the dialog
               },
@@ -89,18 +93,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Accessing the current coins count
-    final coins = Provider.of<CoinsProvider>(context).coins;
-
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Total Coins: $coins'), // Display the total coins
-      // ),
-      body: ListView.builder(
-        itemCount: _messages.length,
-        itemBuilder: (context, index) => ListTile(
-          title: Text(_messages[index]),
-        ),
+      body: Column(
+        children: <Widget>[
+          // Place the GIF at the top of the body, just below the AppBar
+          Center(
+            child: Container(
+              height: 368.0, // Adjust the size to fit your design
+              width: 500.0,
+              child: Image.asset('assets/animations/dino_run1.gif'),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _messages.length,
+              itemBuilder: (context, index) => ListTile(
+                title: Text(_messages[index]),
+              ),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddMessageDialog,
@@ -109,6 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
 
   @override
   void dispose() {

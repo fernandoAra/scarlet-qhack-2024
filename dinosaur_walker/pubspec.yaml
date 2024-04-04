@@ -30,4 +30,6 @@ flutter:
 
   assets:
     # Add assets from the images directory to the application.
+    - assets/animations/dino_run.gif
+    - assets/animations/dino_run2.gif
     - assets/images/
