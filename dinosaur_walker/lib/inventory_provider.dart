@@ -3,21 +3,33 @@ import 'store.dart';
 
 class InventoryProvider with ChangeNotifier {
   final List<StoreItem> _itemsOwned = [];
+  StoreItem? _equippedItem;
 
   List<StoreItem> get itemsOwned => List.unmodifiable(_itemsOwned);
+  StoreItem? get equippedItem => _equippedItem;
 
-  // Adds an item to the inventory if it's not already owned
-  bool purchaseItem(StoreItem item, int cost, int currentCoins) {
-    if (!_itemsOwned.contains(item) && currentCoins >= cost) {
-      _itemsOwned.add(item);
+bool purchaseItem(StoreItem item, int cost, int currentCoins) {
+  if (!isItemOwned(item)) {
+    _itemsOwned.add(item);
+    notifyListeners();
+    return true; // Item successfully purchased
+  }
+  return false; // Item was not purchased (already owned)
+}
+
+
+  void equipItem(StoreItem item) {
+    if (isItemOwned(item)) {
+      _equippedItem = _equippedItem == item ? null : item;
       notifyListeners();
-      return true;
     }
-    return false;
   }
 
-  // Check if an item is owned
+  bool isItemEquipped(StoreItem item) {
+    return _equippedItem?.name == item.name;
+  }
+
   bool isItemOwned(StoreItem item) {
-    return _itemsOwned.contains(item);
+    return _itemsOwned.any((ownedItem) => ownedItem.name == item.name);
   }
 }

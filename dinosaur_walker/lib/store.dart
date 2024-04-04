@@ -17,7 +17,7 @@ class StoreItem {
 class Store extends StatelessWidget {
   // Example store items
   final List<StoreItem> items = [
-    StoreItem(name: "Item 1", cost: 10, levelRequirement: 1),
+    StoreItem(name: "Top Hat", cost: 10, levelRequirement: 1),
     StoreItem(name: "Item 2", cost: 20, levelRequirement: 2),
     StoreItem(name: "Item 3", cost: 30, levelRequirement: 3),
   ];
@@ -30,34 +30,38 @@ class Store extends StatelessWidget {
         final item = items[index];
         return ListTile(
           title: Text(item.name),
-          subtitle: Text("Cost: ${item.cost} coins \n Level Requirement: ${item.levelRequirement}"),
-          trailing: ElevatedButton(
-            onPressed: () {
+          subtitle: Text("Cost: ${item.cost} coins \n Level Requirement = ${item.levelRequirement}"),
+          trailing: Consumer<InventoryProvider>(
+            builder: (context, inventoryProvider, child) {
+              final isOwned = inventoryProvider.isItemOwned(item);
+              final isEquipped = inventoryProvider.isItemEquipped(item);
               final coinsProvider = Provider.of<CoinsProvider>(context, listen: false);
-              final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
-              final expProvider = Provider.of<ExpProvider>(context, listen: false); // Access ExpProvider
-
-              if (expProvider.level < item.levelRequirement) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("You need to be at least level ${item.levelRequirement} to buy this item.")),
-                );
-              } else if (inventoryProvider.isItemOwned(item)) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("You already own this item.")),
-                );
-              } else if (coinsProvider.coins >= item.cost && inventoryProvider.purchaseItem(item, item.cost, coinsProvider.coins)) {
-                coinsProvider.addCoins(-item.cost);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Purchased ${item.name}!')),
-                );
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Not enough coins.')),
-                );
-              }
+              
+              return ElevatedButton(
+                onPressed: () {
+                  if (!isOwned && coinsProvider.coins >= item.cost) {
+                    // Deduct coins and add the item to inventory
+                    coinsProvider.addCoins(-item.cost);
+                    inventoryProvider.purchaseItem(item, item.cost, coinsProvider.coins);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Purchased ${item.name}!')),
+                    );
+                  } else if (isOwned) {
+                    inventoryProvider.equipItem(item); // Equip or Unequip the item
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Not enough coins.')),
+                    );
+                  }
+                },
+                child: Text(isOwned ? isEquipped ? "Unequip" : "Equip" : "Buy"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isEquipped ? Colors.green : null,
+                ),
+              );
             },
-            child: Text('Buy'),
           ),
+
         );
       },
     );

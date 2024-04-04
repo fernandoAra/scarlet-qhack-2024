@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'coins_provider.dart'; // Make sure this import points to where your CoinsProvider class is defined
 import 'exp_provider.dart';
+import 'inventory_provider.dart';
+import 'store.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -91,17 +93,26 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
+    final isTopHatEquipped = Provider.of<InventoryProvider>(context).isItemEquipped(StoreItem(name: "Top Hat", cost: 10, levelRequirement: 1)); // Example check
+
     return Scaffold(
       body: Column(
         children: <Widget>[
-          // Place the GIF at the top of the body, just below the AppBar
           Center(
-            child: Container(
-              height: 368.0, // Adjust the size to fit your design
-              width: 500.0,
-              child: Image.asset('assets/animations/dino_run1.gif'),
+            child: Stack(
+              alignment: Alignment.bottomCenter, // Adjust based on how you want to position the hat relative to the character
+              children: [
+                // Your character image
+                Image.asset('assets/animations/dino_run2.gif', height: 384.0, width: 384.0),
+                // Conditionally display the top hat
+                if (isTopHatEquipped) 
+                  Positioned(
+                    bottom: 300, // Adjust positioning based on your images
+                    child: Image.asset('assets/images/top_hat.png', height: 50), // Adjust size as needed
+                  ),
+              ],
             ),
           ),
           Expanded(
